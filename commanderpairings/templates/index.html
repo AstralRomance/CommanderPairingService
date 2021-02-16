@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+    <title>Register</title>
+</head>
+<body>
+    <script>
+        myStorage = window.localStorage;
+        if (myStorage.getItem('jwt') != null)
+            fetch('http://127.0.0.1:8080/validate_token', {headers:{'authorization':myStorage.getItem('jwt')}, method:'GET'})
+            .then(response => response.json())
+            .then(json => json.is_valid)
+            .then(validate => {
+                if (validate == true)
+                    return true
+                else
+                    fetch('http://127.0.0.1:8080/token', {method:'GET'})
+                    .then(response => response.json())
+                    .then(json => json.jwt)
+                    .then(token => {
+                        myStorage = window.localStorage;
+                        myStorage.setItem('jwt',token);
+                        return token;
+                    });
+            });
+        else
+            fetch('http://127.0.0.1:8080/token', {method:'GET'})
+            .then(response => response.json())
+            .then(json => json.jwt)
+            .then(token => {
+                myStorage = window.localStorage;
+                myStorage.setItem('jwt',token);
+                return token;
+            })
+    </script>
+    <div class="card" style="width:36rem;">
+        <div class="card-header">
+          <h4>Event players</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST" id="playerForm", name="playerForm">
+                <label class="form-label">Player</label>
+                <input id="player" name="player" class="form-control">
+                <label class="form-label">Player's commander</label>
+                <input id="commander" name="commander" class="form-control">
+                <br>
+                 <input type="submit" class="btn btn-primary" value="Add player">
+            </form>
+        </div>
+      </div>
+      <br>
+      <input type="button" class="btn btn-primary" value="START EVENT" action='/pairings'>
+    
+    <script>
+        var myStorage = window.localStorage;
+        document.querySelector('#playerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            let playerForm = e.target;
+            if (playerForm.player.value == ''){
+                alert('Enter player name, please')
+                return false
+            }
+            let data = [];
+            data.push(playerForm.player.value);
+            data.push(playerForm.commander.value);
+            playerForm.reset();
+            fetch('http://127.0.0.1:8080', {method:'POST', headers:{'authorization':myStorage.getItem('jwt')} ,body:JSON.stringify(data)});
+        })
+    </script>
+</body>
+</html>
