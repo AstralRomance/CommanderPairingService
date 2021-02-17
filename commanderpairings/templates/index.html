@@ -10,31 +10,33 @@
 </head>
 <body>
     <script>
-        myStorage = window.localStorage;
-        if (myStorage.getItem('jwt') != null)
-            fetch('http://127.0.0.1:8080/validate_token', {headers:{'authorization':myStorage.getItem('jwt')}, method:'GET'})
+        if (localStorage.getItem('jwt') != null)
+            fetch('/validate_token', {headers:
+                                                    {
+                                                        'Authorization':localStorage.getItem('jwt'),
+                                                        'Content-Type': 'application/json'
+                                                    },
+                                                    method:'GET'})
             .then(response => response.json())
             .then(json => json.is_valid)
             .then(validate => {
                 if (validate == true)
                     return true
                 else
-                    fetch('http://127.0.0.1:8080/token', {method:'GET'})
+                    fetch('/token', {method:'GET'})
                     .then(response => response.json())
                     .then(json => json.jwt)
                     .then(token => {
-                        myStorage = window.localStorage;
-                        myStorage.setItem('jwt',token);
+                        localStorage.setItem('jwt',token);
                         return token;
                     });
             });
         else
-            fetch('http://127.0.0.1:8080/token', {method:'GET'})
+            fetch('/token', {method:'GET'})
             .then(response => response.json())
             .then(json => json.jwt)
             .then(token => {
-                myStorage = window.localStorage;
-                myStorage.setItem('jwt',token);
+                localStorage.setItem('jwt',token);
                 return token;
             })
     </script>
@@ -53,13 +55,12 @@
             </form>
         </div>
         <br>
-        <form method="GET" action='http://localhost:8080/pairings'>
+        <form method="GET" action='/pairings'>
         <button type="submit" class="btn btn-success">START EVENT</button>
         </form>
       </div>
     
     <script>
-        var myStorage = window.localStorage;
         document.querySelector('#playerForm').addEventListener('submit', (e) => {
             e.preventDefault();
             let playerForm = e.target;
@@ -71,7 +72,7 @@
             data.push(playerForm.player.value);
             data.push(playerForm.commander.value);
             playerForm.reset();
-            fetch('http://127.0.0.1:8080', {method:'POST', headers:{'authorization':myStorage.getItem('jwt')} ,body:JSON.stringify(data)});
+            fetch('/', {method:'POST', headers:{'Authorization':localStorage.getItem('jwt')} ,body:JSON.stringify(data)});
         })
     </script>
 </body>

@@ -14,6 +14,14 @@ async def index(request):
 async def pairings(request):
     return {}
 
+def get_pairings(request):
+    session_headers = request.headers
+    current_file = jwt.decode(session_headers['authorization'], 'secret', algorithms=['HS256'])['current_file']
+    event_players = {}
+    with open(f'Events/{current_file}', 'r') as event_file:
+        event_players = json.load(event_file)
+    return {'EventInfo': aiohttp.web.json_response(event_players)}
+
 def gen_token(filename: str, datetime_now: datetime.datetime) -> str:
     encoded_jwt = jwt.encode({'current_file': filename,'date_end':str(datetime_now+datetime.timedelta(days=1))}, 'secret', algorithm='HS256')
     return encoded_jwt
@@ -28,14 +36,14 @@ async def get_token(request):
 
 async def validate_token(request):
     session_headers = request.headers
-    current_token_finish = jwt.decode(session_headers['Authorization'], 'secret', algorithms=['HS256'])['date_end']
+    current_token_finish = jwt.decode(session_headers['authorization'], 'secret', algorithms=['HS256'])['date_end']
     is_valid = (datetime.datetime.now() < parser.parse(current_token_finish))
     return aiohttp.web.json_response({'is_valid': is_valid})
 
 async def add_player(request):
     player_info = await request.json()
     session_headers = request.headers
-    current_filename = jwt.decode(session_headers['Authorization'], 'secret', algorithms=['HS256'])['current_file']
+    current_filename = jwt.decode(session_headers['authorization'], 'secret', algorithms=['HS256'])['current_file']
     event_info = {}
     with open(f'Events/{current_filename}', 'r') as event_file:
         event_info = json.load(event_file)

@@ -8,7 +8,13 @@
     <title>Pairings</title>
 </head>
 <body>
+    <script>
+        fetch('/get_pairings', {method:'GET', headers:
+                                                    {
+                                                        'Authorization':localStorage.getItem('jwt'),
+                                                    }})
+    </script>
     <h1>PAIRINGS PAGE</h1>
-    
+    <p>event_info</p>
 </body>
 </html>
