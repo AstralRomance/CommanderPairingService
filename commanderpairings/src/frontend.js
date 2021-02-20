@@ -32,19 +32,23 @@ function checkToken()
 
 function makePairingsPage()
 {
-    fetch('/get_pairings', {method:'GET', headers:
+    fetch('/get_players', {method:'GET', headers:
                                                     {
                                                         'Authorization':localStorage.getItem('jwt'),
                                                     }})
     .then(response => response.json())
     .then(json => json.players)
     .then(players => {
-        let html_container = document.getElementById('playerName')
+        let html_container = document.getElementById('playerName');
         for (let player of players)
         {
             let player_container = document.createElement('div');
             player_container.className = 'PlayerContainer';
-            player_container.append(document.createTextNode(player[0]));
+            player_container.append(document.createTextNode(player['player_name']));
+            player_container.append(document.createTextNode(' '));
+            player_container.append(document.createTextNode(player['player_commander']));
+            player_container.append(document.createTextNode(' - '));
+            player_container.append(document.createTextNode(player['points']));
             html_container.append(player_container);
         }
     })

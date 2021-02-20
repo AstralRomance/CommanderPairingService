@@ -1,5 +1,6 @@
 import asyncio
 import json
+import random
 import aiohttp
 import jwt
 import datetime
@@ -14,7 +15,7 @@ async def index(request):
 async def pairings(request):
     return {}
 
-def get_pairings(request):
+def get_players(request):
     session_headers = request.headers
     current_file = jwt.decode(session_headers['authorization'], 'secret', algorithms=['HS256'])['current_file']
     event_players = {}
@@ -47,7 +48,26 @@ async def add_player(request):
     event_info = {}
     with open(f'Events/{current_filename}', 'r') as event_file:
         event_info = json.load(event_file)
-        event_info['players'].append(player_info)
+        event_info['players'].append({'player_name':player_info[0], 'player_commander':player_info[1], 'points':0})
     with open(f'Events/{current_filename}', 'w') as event_file:
         json.dump(event_info, event_file)
     return aiohttp.web.json_response(event_info)
+
+async def make_pairings(request):
+    event_info = await request.json()
+    session_headers = request.headers
+    current_filename = jwt.decode(session_headers['authorization'], 'secret', algorithms=['HS256'])['current_file']
+    event_dict = {}
+    players_list = []
+    with open(f'Events/{current_filename}', 'r') as event_file:
+        event_dict = json.load(event_file)
+        players_list = event_dict['players']
+    points_set = set([point for point in players_list['points']])
+    players_per_point = {}
+    for point_val in points_set:
+        temp = []
+        for player in players_list:
+            if int(player['points']) == point_val:
+                temp.append(player['player_name'])
+        players_per_point[point_val] = temp.copy()
+        
