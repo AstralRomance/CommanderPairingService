@@ -20,7 +20,7 @@ def get_pairings(request):
     event_players = {}
     with open(f'Events/{current_file}', 'r') as event_file:
         event_players = json.load(event_file)
-    return {'EventInfo': aiohttp.web.json_response(event_players)}
+    return aiohttp.web.json_response(event_players)
 
 def gen_token(filename: str, datetime_now: datetime.datetime) -> str:
     encoded_jwt = jwt.encode({'current_file': filename,'date_end':str(datetime_now+datetime.timedelta(days=1))}, 'secret', algorithm='HS256')
