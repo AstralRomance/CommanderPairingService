@@ -1,3 +1,24 @@
+function checkToken()
+{
+    if (localStorage.getItem('jwt') != null)
+            fetch('/validate_token', {headers:
+                                                    {
+                                                        'Authorization':localStorage.getItem('jwt'),
+                                                        'Content-Type': 'application/json'
+                                                    },
+                                                    method:'GET'})
+            .then(response => response.json())
+            .then(json => json.is_valid)
+            .then(validate => {
+                if (validate == true)
+                    return true
+                else
+                    getToken();
+            });
+        else
+            getToken()
+}
+
 function getToken()
 {
     fetch('/token', {method:'GET'})
