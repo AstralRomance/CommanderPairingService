@@ -1,10 +1,9 @@
 import uvicorn
-
 from .settings import settings
 
 uvicorn.run(
-    'commander_pairings.app:app',
+    'pairings.app:app',
     host=settings.server_host,
     port=settings.server_port,
-    reload=True
+    reload=True,
 )
