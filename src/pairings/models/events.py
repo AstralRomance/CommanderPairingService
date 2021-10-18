@@ -5,7 +5,6 @@ from pydantic import BaseModel
 class EventBase(BaseModel):
     name: str
     date: date
-    players: str
 
     class Config:
         orm_mode = True

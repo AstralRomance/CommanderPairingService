@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from .events import router as events_router
+from .registerSvc import router as register_router
 
 
 router = APIRouter()
-router.include_router(events_router)
+router.include_router(register_router)
