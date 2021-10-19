@@ -1,0 +1,26 @@
+[
+    {
+        "Event_name": "string",
+        "Event_Date": "Date",
+        "Event_id": "integer",
+        "Players": [
+            {
+                "Player_name": "string",
+                "Commander": "string",
+                "Points": "integer",
+                "Sub_points": "integer"
+            }
+        ],
+        "Rounds": [
+            {
+                "Number": "integer",
+                "Players_per_table": [
+                    {
+                        "Table number": "integer",
+                        "Players_on_table": ["Player", "Player", "Player", "Player"]
+                    }
+                ]
+            }
+        ]
+    }
+]
