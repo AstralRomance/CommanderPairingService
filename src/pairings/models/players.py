@@ -17,3 +17,6 @@ class RemovePlayerFromEvent(BaseModel):
 
     class Config:
         orm_mode = True
+
+class PlayerToReturn(PlayerBase):
+    player_id: int
