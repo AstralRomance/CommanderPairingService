@@ -16,7 +16,7 @@
                 "Number": "integer",
                 "Players_per_table": [
                     {
-                        "Table number": "integer",
+                        "Table_number": "integer",
                         "Players_on_table": ["Player", "Player", "Player", "Player"]
                     }
                 ]

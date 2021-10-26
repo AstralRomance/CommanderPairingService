@@ -4,6 +4,8 @@ from pydantic import BaseModel
 class PlayerBase(BaseModel):
     name: str
     commander: str
+    points: int
+    sub_points: int
 
 class AddPlayerToEvent(PlayerBase):
     event_id: int
