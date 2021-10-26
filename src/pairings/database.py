@@ -1,23 +1,12 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+import pymongo
 
 from .settings import settings
 
 
-engine = create_engine(
-    settings.database_url,
-    connect_args={'check_same_thread': False}
-)
-
-Session = sessionmaker(
-    engine,
-    autocommit=False,
-    autoflush=False
-)
-
-def get_session() -> Session:
-    session = Session()
+def get_session():
+    client = pymongo.MongoClient(settings.database_url, serverSelectionTimeoutMS=5000)
     try:
-        yield session
+        print(client.server_info())
+        yield client
     finally:
-        session.close()
+        client.close()
