@@ -3,7 +3,7 @@ from typing import List
 from pydantic import BaseModel
 
 
-class PlayersPerTableBase(BaseModel):
+class PlayersPerTable(BaseModel):
     table_number: int
     players_on_table: List[str]
 
@@ -11,21 +11,14 @@ class PlayersPerTableBase(BaseModel):
         orm_mode = True
 
 
-class PlayersPerTable(PlayersPerTableBase):
-    id: int
-
-    class Config:
-        orm_mode = True
-
-
-class EventCreate(PlayersPerTableBase):
+class EventCreate(PlayersPerTable):
     pass
 
     class Config:
         orm_mode = True
 
 
-class EventUpdate(PlayersPerTableBase):
+class EventUpdate(PlayersPerTable):
     pass
 
     class Config:

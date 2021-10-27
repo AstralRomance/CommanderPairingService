@@ -1,33 +1,31 @@
-from typing import List
 from datetime import datetime
+from typing import List
+
 from pydantic import BaseModel
 
-from .players import PlayerBase
-from .round import RoundBase
+from .players import Player
+from .round import Round
 
-# Зачем base?
-class EventBase(BaseModel):
+
+class Event(BaseModel):
     name: str
     date: datetime
     id: int
-    players: List[PlayerBase]
-    rounds: List[RoundBase]
+    players: List[Player]
+    rounds: List[Round]
 
     class Config:
         orm_mode = True
 
-class Event(EventBase):
-    
-    class Config:
-        orm_mode = True
 
-class EventCreate(EventBase):
+class EventCreate(Event):
     pass
 
     class Config:
         orm_mode = True
 
-class EventUpdate(EventBase):
+
+class EventUpdate(Event):
     pass
 
     class Config:

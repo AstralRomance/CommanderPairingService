@@ -1,17 +1,19 @@
 from pydantic import BaseModel
 
 
-class PlayerBase(BaseModel):
+class Player(BaseModel):
     name: str
     commander: str
     points: int
     sub_points: int
 
-class AddPlayerToEvent(PlayerBase):
+
+class AddPlayerToEvent(Player):
     event_id: int
 
     class Config:
         orm_mode = True
+
 
 class RemovePlayerFromEvent(BaseModel):
     event_id: int
@@ -20,5 +22,6 @@ class RemovePlayerFromEvent(BaseModel):
     class Config:
         orm_mode = True
 
-class PlayerToReturn(PlayerBase):
+
+class PlayerToReturn(Player):
     player_id: int
