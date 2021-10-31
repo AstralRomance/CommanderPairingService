@@ -1,4 +1,5 @@
 import pymongo
+from pymongo import ReturnDocument
 
 from .settings import settings
 from .tables import Event
@@ -25,3 +26,6 @@ class Database:
 
     def delete_event(self, event_id):
         return Event.decode(self.session.find_one_and_delete({"Event_id": event_id}))
+
+    def replace_event(self, event_id, new_event, return_document=ReturnDocument.AFTER):
+        return Event.decode(self.session.find_one_and_replace({"Event_id": event_id}, Event.encode(new_event)))

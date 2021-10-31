@@ -24,15 +24,13 @@ class EventsService:
         self.session.insert_event(event)
         return event
 
-    # ToDo
     def update(self, event_id: int, event_data: EventUpdate) -> tables.Event:
         event = self._get(event_id)
         for field, value in event_data:
             setattr(event, field, value)
-        self.session.commit()
-        return event
+        return self.session.replace_event(event_id, event)
 
-    def delete(self, event_id: int):
+    def delete(self, event_id: int) -> tables.Event:
         event = self.session.delete_event(event_id)
         return event
 
