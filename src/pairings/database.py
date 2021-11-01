@@ -45,3 +45,13 @@ class Database:
                 break
         self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(event))
         return event
+
+    def update_player_on_event(self, event_id: int, player_id: int, player_data):
+        event = Event.decode(self.session.find_one({"Event_id": event_id}))
+        for player in event.players:
+            if player['Player_id'] == player_id:
+                for field in player_data.keys():
+                    player[field] = player_data[field]
+                break
+        self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(event))
+        return event
