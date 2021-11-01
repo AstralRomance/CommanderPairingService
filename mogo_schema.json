@@ -5,6 +5,7 @@
         "Event_id": "integer",
         "Players": [
             {
+                "Player_id": "int",
                 "Player_name": "string",
                 "Commander": "string",
                 "Points": "integer",

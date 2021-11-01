@@ -6,6 +6,7 @@ class Event:
         self.id = event_id
         self.players = players
         self.rounds = rounds
+        self.is_finished = True
 
     @staticmethod
     def encode(event):
@@ -26,9 +27,10 @@ class Event:
 
 class Player:
 
-    def __init__(self, name, commander, points, sub_points):
+    def __init__(self, name, commander, deck_link, points, sub_points):
         self.player_name = name
         self.commander = commander
+        self.deck_link = deck_link
         self.points = points
         self.sub_points = sub_points
 

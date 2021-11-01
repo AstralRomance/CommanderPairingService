@@ -4,5 +4,8 @@ from .events import Event
 from .players import PlayerToReturn
 
 
-class PlayersOnEvent(Event):
+class FullEventData(Event):
     players: List[PlayerToReturn]
+
+class PlayersPerTable(BaseModel):
+    pass

@@ -36,3 +36,6 @@ class EventsService:
 
     def get_players(self, event_id: int) -> List[tables.Player]:
         return self._get(event_id).players
+
+    def get_full_event_data(self, event_id: int):
+        return self._get(event_id)

@@ -1,6 +1,8 @@
 from fastapi import Depends
-from sqlalchemy.orm import Session
 
+from pairings.models.events import Event
+
+from .registerSvc import EventsService
 from .. import tables
 from ..models.players import AddPlayerToEvent, Player
 
@@ -8,16 +10,16 @@ from ..models.players import AddPlayerToEvent, Player
 class PlayerService:
     def __init__(self, session):
         self.session = session
+        self.event_service = EventsService()
 
     def _get(self, event_id: int, player_id: int) -> tables.Player:
-        player_data = self.session.query(tables.Player).filter_by(event_id=event_id).filter_by(
-            event_id=event_id).first()
+        event_data = self.event_service._get(event_id)
+        player_data = event_data.players(player_id)
         return player_data
 
-    def add_to_event(self, player_info: AddPlayerToEvent) -> tables.Player:
-        player_data = tables.Player(**player_info.dict())
-        self.session.add(player_data)
-        self.session.commit()
+    def add_to_event(self, event_id: int, player_info: AddPlayerToEvent) -> tables.Player:
+        target_event = self.event_service._get(event_id)
+        
         return player_data
 
     def remove_from_event(self, event_id: int, player_id: int):
