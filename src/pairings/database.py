@@ -38,6 +38,10 @@ class Database:
         return event
 
     def remove_player_from_event(self, event_id: int, player_id: int, return_document=ReturnDocument.AFTER):
-        event = Event.decode(self.session.find_one_and_update({"Event_id": event_id}))
-        event.players.find_one_and_delete({"Player_id": player_id})
+        event = Event.decode(self.session.find_one({"Event_id": event_id}))
+        for player in event.players:
+            if player["Player_id"] == player_id:
+                event.players.remove(player)
+                break
+        self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(event))
         return event
