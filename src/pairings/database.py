@@ -32,9 +32,19 @@ class Database:
     def replace_event(self, event_id: int, new_event, return_document=ReturnDocument.AFTER):
         return Event.decode(self.session.find_one_and_replace({"Event_id": event_id}, Event.encode(new_event)))
 
-    def insert_player_to_event(self, event_id: int, player_data, return_document=ReturnDocument.AFTER):
-        event = Event.decode(self.session.find_one_and_update({"Event_id": event_id}))
+    def get_player_from_event(self, event_id: int, player_id: int):
+        event = Event.decode(self.session.find_one({"Event_id": event_id}))
+        target_player = None
+        for player in event.players:
+            if player["Player_id"] == player_id:
+                target_player = player
+                break
+        return target_player
+
+    def add_player_on_event(self, event_id: int, player_data, return_document=ReturnDocument.AFTER):
+        event = Event.decode(self.session.find_one({"Event_id": event_id}))
         event.players.append(player_data)
+        self.session.find_one_and_replace({"Event_id": event_id})
         return event
 
     def remove_player_from_event(self, event_id: int, player_id: int, return_document=ReturnDocument.AFTER):
@@ -43,7 +53,7 @@ class Database:
             if player["Player_id"] == player_id:
                 event.players.remove(player)
                 break
-        self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(event))
+        self.session.find_one_and_replace({"Event_id": event_id}, Event.encode(event))
         return event
 
     def update_player_on_event(self, event_id: int, player_id: int, player_data):
@@ -53,5 +63,5 @@ class Database:
                 for field in player_data.keys():
                     player[field] = player_data[field]
                 break
-        self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(event))
+        self.session.find_one_and_replace({"Event_id": event_id}, Event.encode(event))
         return event

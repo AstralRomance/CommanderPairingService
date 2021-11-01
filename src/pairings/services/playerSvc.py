@@ -13,23 +13,13 @@ class PlayerService:
         self.event_service = EventsService()
 
     def _get(self, event_id: int, player_id: int) -> tables.Player:
-        event_data = self.event_service._get(event_id)
-        player_data = event_data.players(player_id)
-        return player_data
+        return self.session.get_player_from_event(event_id, player_id)
 
     def add_to_event(self, event_id: int, player_info: AddPlayerToEvent) -> tables.Player:
-        target_event = self.event_service._get(event_id)
-        
-        return player_data
+        return self.session.add_player_on_event(event_id, player_info)
 
     def remove_from_event(self, event_id: int, player_id: int):
-        player_on_event = self._get(event_id, player_id)
-        self.session.delete(player_on_event)
-        self.session.commit()
+        return self.session.remove_player_from_event(event_id, player_id)
 
     def update_player_info(self, event_id: int, player_id: int, player_info: Player):
-        player_data = self._get(event_id, player_id)
-        for field, value in player_info:
-            setattr(player_data, field, value)
-        self.session.commit()
-        return player_data
+        return self.session.update_player_info(event_id, player_id, player_info)
