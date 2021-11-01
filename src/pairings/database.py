@@ -17,69 +17,73 @@ class Database:
     def insert_event(self, event: Event):
         self.session.insert_one(Event.encode(event))
 
-    def find_event(self, event_id: int):
+    def find_event(self, event_id: int) -> Event:
         return Event.decode(self.session.find_one({'Event_id': event_id}))
 
-    def find_events(self, events_id: List[int]):
+    def find_events(self, events_id: List[int]) -> List[Event]:
         return [Event.decode(self.session.find_one({'Event_id': event_id})) for event_id in events_id]
 
-    def get_events(self):
+    def get_events(self) -> List[Event]:
         return [Event.decode(event) for event in self.session.find({})]
 
-    def delete_event(self, event_id: int):
+    def delete_event(self, event_id: int) -> Event:
         return Event.decode(self.session.find_one_and_delete({'Event_id': event_id}))
 
-    def replace_event(self, event_id: int, new_event, return_document=ReturnDocument.AFTER):
-        return Event.decode(self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(new_event)))
+    def replace_event(self, event_id: int, new_event) -> Event:
+        return Event.decode(self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(new_event),
+                                                              return_document=ReturnDocument.AFTER))
 
-    def get_player_from_event(self, event_id: int, player_id: int):
+    def get_player_from_event(self, event_id: int, player_id: int) -> Player:
         event = Event.decode(self.session.find_one({'Event_id': event_id}))
         target_player = None
         for player in event.players:
-            if player['Player_id'] == player_id:
+            if player.player_id == player_id:
                 target_player = player
                 break
         return target_player
 
-    def add_player_on_event(self, event_id: int, player_data, return_document=ReturnDocument.AFTER):
+    def add_player_on_event(self, event_id: int, player_data) -> Event:
         event = Event.decode(self.session.find_one({'Event_id': event_id}))
         event.players.append(player_data)
-        self.session.find_one_and_replace({'Event_id': event_id})
-        return event
+        return Event.decode(self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(event),
+                                                              return_document=ReturnDocument.AFTER))
 
-    def remove_player_from_event(self, event_id: int, player_id: int, return_document=ReturnDocument.AFTER):
+    def remove_player_from_event(self, event_id: int, player_id: int) -> Event:
         event = Event.decode(self.session.find_one({'Event_id': event_id}))
         for player in event.players:
-            if player['Player_id'] == player_id:
+            if player.player_id == player_id:
                 event.players.remove(player)
                 break
-        self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(event))
-        return event
+        return Event.decode(self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(event),
+                                                              return_document=ReturnDocument.AFTER))
 
-    def update_player_on_event(self, event_id: int, player_id: int, player_data):
+    def update_player_on_event(self, event_id: int, player_id: int, player_data) -> Event:
         event = Event.decode(self.session.find_one({'Event_id': event_id}))
         for player in event.players:
-            if player['Player_id'] == player_id:
+            if player.player_id == player_id:
                 for field in player_data.keys():
                     player[field] = player_data[field]
                 break
-        self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(event))
-        return event
+        return Event.decode(self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(event),
+                                                              return_document=ReturnDocument.AFTER))
 
-    def change_player_points(self, event_id: int, player_id: int, player_points: Dict):
+    def change_player_points(self, event_id: int, player_id: int, player_points: Dict) -> Event:
         event = Event.decode(self.session.find_one({'Event_id': event_id}))
         for player in event.players:
-            if player['Player_id'] == player_id:
-                player['Points'] += player_points['points']
-                player['Sub_points'] += player_points['sub_points']
-        self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(event))
+            if player.player_id == player_id:
+                player.points += player_points['points']
+                player.sub_points += player_points['sub_points']
+        return Event.decode(
+            self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(event),
+                                              return_document=ReturnDocument.AFTER))
 
     def get_all_event_players(self, event_id: int) -> List[Player]:
         event = Event.decode(self.session.find_one({'Event_id': event_id}))
         return event.players
 
-    def add_round_to_event(self, event_id: int, round_data: List[Dict]):
+    def add_round_to_event(self, event_id: int, round_data: List[Dict]) -> Event:
         event = Event.decode(self.session.find_one({'Event_id': event_id}))
-        event['Rounds'].append(round_data)
-        self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(event))
-        return event
+        event.rounds.append(round_data)
+        return Event.decode(
+            self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(event),
+                                              return_document=ReturnDocument.AFTER))
