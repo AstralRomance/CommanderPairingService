@@ -10,19 +10,19 @@ class Event:
 
     @staticmethod
     def encode(event):
-        return {"Event_name": event.name,
-                "Event_Date": event.date,
-                "Event_id": event.id,
-                "Players": [Player.encode(player) for player in event.players],
-                "Rounds": [Round.encode(event_round) for event_round in event.rounds]}
+        return {'Event_name': event.name,
+                'Event_Date': event.date,
+                'Event_id': event.id,
+                'Players': [Player.encode(player) for player in event.players],
+                'Rounds': [Round.encode(event_round) for event_round in event.rounds]}
 
     @staticmethod
     def decode(event):
-        return Event(event["Event_name"],
-                     event["Event_Date"],
-                     event["Event_id"],
-                     [Player.decode(player) for player in event["Players"]],
-                     [Round.decode(event_round) for event_round in event["Rounds"]])
+        return Event(event['Event_name'],
+                     event['Event_Date'],
+                     event['Event_id'],
+                     [Player.decode(player) for player in event['Players']],
+                     [Round.decode(event_round) for event_round in event['Rounds']])
 
 
 class Player:
@@ -33,20 +33,23 @@ class Player:
         self.deck_link = deck_link
         self.points = points
         self.sub_points = sub_points
+        self.has_autowin = 0
 
     @staticmethod
     def encode(player):
-        return {"Player_name": player.player_name,
-                "Commander": player.commander,
-                "Points": player.points,
-                "Sub_points": player.sub_points}
+        return {'Player_name': player.player_name,
+                'Commander': player.commander,
+                'Points': player.points,
+                'Sub_points': player.sub_points,
+                'Has_autowin': player.has_autowin}
 
     @staticmethod
     def decode(player):
-        return Player(player["Player_name"],
-                      player["Commander"],
-                      player["Points"],
-                      player["Sub_points"])
+        return Player(player['Player_name'],
+                      player['Commander'],
+                      player['Points'],
+                      player['Sub_points'],
+                      player['Has_autowin'])
 
 
 class Round:
@@ -57,17 +60,17 @@ class Round:
 
     @staticmethod
     def encode(event_round):
-        return {"Number": event_round.number,
-                "Players_per_table": [PlayersPerTable.encode(players_per_table)
+        return {'Number': event_round.number,
+                'Players_per_table': [PlayersPerTable.encode(players_per_table)
                                       for players_per_table
                                       in event_round.players_per_table]}
 
     @staticmethod
     def decode(event_round):
-        return Round(event_round["Number"],
+        return Round(event_round['Number'],
                      [PlayersPerTable.decode(event_round)
                       for event_round
-                      in event_round["Players_per_table"]])
+                      in event_round['Players_per_table']])
 
 
 class PlayersPerTable:
@@ -78,10 +81,10 @@ class PlayersPerTable:
 
     @staticmethod
     def encode(player_per_tables):
-        return {"Table_number": player_per_tables.table_number,
-                "Players_on_table": [player for player in player_per_tables.players_on_table]}
+        return {'Table_number': player_per_tables.table_number,
+                'Players_on_table': [player for player in player_per_tables.players_on_table]}
 
     @staticmethod
     def decode(player_per_tables):
-        return PlayersPerTable(player_per_tables["Table_number"],
-                     [player for player in player_per_tables["Players_on_table"]])
+        return PlayersPerTable(player_per_tables['Table_number'],
+                     [player for player in player_per_tables['Players_on_table']])

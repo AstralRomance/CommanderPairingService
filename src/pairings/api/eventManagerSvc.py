@@ -11,7 +11,8 @@ router = APIRouter(prefix='/event-manager')
 @router.put('/create-new-round/{event_id}/{round_number}', response_model=PlayersPerTable)
 def create_new_round(event_id: int, round_number: int, service: eventManagerSvc = Depends()):
     if round_number == 1:
-        service.generate_first_round(event_id)
+        playing_tables = service.generate_first_round(event_id)
+        service.add_round(playing_tables)
     else:
         service.generate_round(event_id)
 
