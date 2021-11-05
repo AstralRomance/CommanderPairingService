@@ -10,9 +10,7 @@ from .tables import Event, Player
 class Database:
 
     def __init__(self):
-        self.session = \
-            pymongo.MongoClient(settings.database_url, serverSelectionTimeoutMS=5000)['CommanderPairingService'][
-                'events']
+        self.session = pymongo.MongoClient(settings.database_url)['CommanderPairingService']['events']
 
     def insert_event(self, event: Event):
         self.session.insert_one(Event.encode(event))
