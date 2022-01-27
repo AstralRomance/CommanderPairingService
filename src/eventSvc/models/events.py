@@ -8,7 +8,7 @@ from pydantic import BaseModel
 class Event(BaseModel):
     Event_name: str
     Event_Date: datetime
-    Event_id: int
+    Event_id: str
 
     class Config:
         orm_mode = True
@@ -16,4 +16,4 @@ class Event(BaseModel):
 class CreateEvent(BaseModel):
     Event_name: str
     Event_Date: datetime
-    Event_id: int
+    Event_id: str

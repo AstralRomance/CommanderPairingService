@@ -17,10 +17,10 @@ def create_event(event_data: CreateEvent, service: EventService = Depends()):
     return service.create(event_data)
 
 @router.put('/{event_id}', response_model = Event)
-def update_event(event_id: int, event_data: Event, service: EventService = Depends()):
+def update_event(event_id: str, event_data: Event, service: EventService = Depends()):
     return service.update(event_id, event_data)
 
 @router.delete('/{event_id}')
-def delete_event(event_id: int, service: EventService = Depends()):
+def delete_event(event_id: str, service: EventService = Depends()):
     service.delete(event_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

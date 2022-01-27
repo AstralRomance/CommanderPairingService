@@ -8,16 +8,16 @@ class PlayerService:
     def __init__(self, session):
         self.session = session
 
-    def _get(self, event_id: int, player_id: int) -> tables.Player:
+    def _get(self, event_id: str, player_id: int) -> tables.Player:
         return self.session.get_player_from_event(event_id, player_id)
 
-    def add_to_event(self, event_id: int, player_info: AddPlayerToEvent) -> tables.Player:
+    def add_to_event(self, event_id: str, player_info: AddPlayerToEvent) -> tables.Player:
         return self.session.add_player_on_event(event_id, player_info)
 
-    def remove_from_event(self, event_id: int, player_id: int):
+    def remove_from_event(self, event_id: str, player_id: int):
         return self.session.remove_player_from_event(event_id, player_id)
 
-    def update_player_info(self, event_id: int, player_id: int, player_info: Player):
+    def update_player_info(self, event_id: str, player_id: int, player_info: Player):
         return self.session.update_player_on_event(event_id, player_id, player_info)
 
     def get_players(self, event_id):
