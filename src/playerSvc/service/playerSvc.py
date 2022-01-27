@@ -1,8 +1,5 @@
 from fastapi import Depends
 
-from pairings.models.events import Event
-
-from .registerSvc import EventsService
 from .. import tables
 from ..models.players import AddPlayerToEvent, Player
 
