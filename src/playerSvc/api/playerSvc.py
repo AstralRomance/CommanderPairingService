@@ -5,7 +5,7 @@ from ..models.players import (
     AddPlayerToEvent,
     PlayerToReturn
 )
-from ..services.playerSvc import PlayerService
+from ..service.playerSvc import PlayerService
 
 router = APIRouter(
     prefix='/players'

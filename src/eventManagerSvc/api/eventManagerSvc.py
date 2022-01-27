@@ -2,7 +2,7 @@ from typing import List
 from fastapi import APIRouter, Depends, Response, status
 from ..services.registerSvc import EventsService
 from ..services.eventManagerSvc import eventManagerSvc
-from ..models.event_manager import FullEventData, PlayersOnEvent, PlayersPerTable
+from ..models.event_manager import FullEventData, PlayersPerTable
 from ..tables import Event
 
 router = APIRouter(prefix='/event-manager')
