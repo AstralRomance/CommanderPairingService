@@ -9,14 +9,14 @@ class Player(BaseModel):
 
 
 class AddPlayerToEvent(Player):
-    event_id: int
+    event_id: str
 
     class Config:
         orm_mode = True
 
 
 class RemovePlayerFromEvent(BaseModel):
-    event_id: int
+    event_id: str
     player_id: int
 
     class Config:

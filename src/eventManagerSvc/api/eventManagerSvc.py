@@ -9,7 +9,7 @@ router = APIRouter(prefix='/event-manager')
 
 
 @router.put('/create-new-round/{event_id}/{round_number}', response_model=PlayersPerTable)
-def create_new_round(event_id: int, round_number: int, service: eventManagerSvc = Depends()):
+def create_new_round(event_id: str, round_number: int, service: eventManagerSvc = Depends()):
     if round_number == 1:
         playing_tables = service.generate_first_round(event_id)
         service.add_round(playing_tables)
@@ -17,11 +17,11 @@ def create_new_round(event_id: int, round_number: int, service: eventManagerSvc 
         service.generate_round(event_id)
 
 @router.put('/change-player-points/{event_id}')
-def change_player_points(event_id: int, players_info: List[str]):
+def change_player_points(event_id: str, players_info: List[str]):
     pass
 
 @router.post('/finish-event/{event_id}')
-def finish_event(event_id: int):
+def finish_event(event_id: str):
     pass
 
 @router.get('/get-full-event-data/{event_id}', response_model=FullEventData)

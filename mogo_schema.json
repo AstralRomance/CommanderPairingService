@@ -3,13 +3,16 @@
         "Event_name": "string",
         "Event_Date": "Date",
         "Event_id": "integer",
+        "Is_finished": "bool",
         "Players": [
             {
                 "Player_id": "int",
                 "Player_name": "string",
                 "Commander": "string",
+                "Deck_link": "хз",
                 "Points": "integer",
-                "Sub_points": "integer"
+                "Sub_points": "integer",
+                "Has_autowin": "float"
             }
         ],
         "Rounds": [
