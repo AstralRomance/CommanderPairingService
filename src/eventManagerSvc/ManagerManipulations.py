@@ -12,6 +12,9 @@ class ManagerManipulations:
     def __init__(self):
         self.session = pymongo.MongoClient(settings.database_url, serverSelectionTimeoutMS=5000)['CommanderPairingService']['events']
 
+    def get_full_event_data(self):
+        pass
+
     # def insert_event(self, event: Event):
     #     self.session.insert_one(Event.encode(event))
 
