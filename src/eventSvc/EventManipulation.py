@@ -4,7 +4,7 @@ import pymongo
 from pymongo import ReturnDocument
 
 from .settings import settings
-from .tables import Event
+from .EventSchema import Event
 
 
 class EventManipulation:
@@ -12,6 +12,9 @@ class EventManipulation:
     def __init__(self):
         self.session = \
             pymongo.MongoClient(settings.database_url, serverSelectionTimeoutMS=5000)['CommanderPairingService']['events']
+
+    def find_one(self, event_id: str):
+        return Event.decode(self.session.find_one({'Event_id': event_id}))
 
     def insert_event(self, event: Event):
         self.session.insert_one(Event.encode(event))
@@ -26,4 +29,5 @@ class EventManipulation:
         return Event.decode(self.session.find_one_and_delete({'Event_id': event_id}))
 
     def replace_event(self, event_id: int, new_event, return_document=ReturnDocument.AFTER):
-        return Event.decode(self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(new_event)))
+        return Event.decode(self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(new_event),
+                            return_document=return_document))
