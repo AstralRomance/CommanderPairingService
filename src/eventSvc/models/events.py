@@ -16,4 +16,3 @@ class EventBase(BaseModel):
 class CreateEvent(BaseModel):
     Event_name: str
     Event_Date: datetime
-    Event_id: int

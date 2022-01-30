@@ -1,24 +1,18 @@
+from typing import List
+
 from fastapi import Depends
 
-from .. import tables
-from ..models.players import AddPlayerToEvent, Player
+from ..PlayerSchema import Player
+from ..PlayerManipulation import PlayerManipulation
 
 
 class PlayerService:
-    def __init__(self, session):
+    def __init__(self, session = Depends(PlayerManipulation)):
         self.session = session
 
-    def _get(self, event_id: str, player_id: int) -> tables.Player:
+    def all_event_players(self, event_id: str) -> List[Player]:
+        players = self.session.get_all_event_players(event_id)
+        return players
+
+    def player_on_event(self, event_id: str, player_id: int) -> Player:
         return self.session.get_player_from_event(event_id, player_id)
-
-    def add_to_event(self, event_id: str, player_info: AddPlayerToEvent) -> tables.Player:
-        return self.session.add_player_on_event(event_id, player_info)
-
-    def remove_from_event(self, event_id: str, player_id: int):
-        return self.session.remove_player_from_event(event_id, player_id)
-
-    def update_player_info(self, event_id: str, player_id: int, player_info: Player):
-        return self.session.update_player_on_event(event_id, player_id, player_info)
-
-    def get_players(self, event_id):
-        return self.session.get_all_event_players(event_id)

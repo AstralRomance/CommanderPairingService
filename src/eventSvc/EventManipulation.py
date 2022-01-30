@@ -19,9 +19,6 @@ class EventManipulation:
     def insert_event(self, event: Event):
         self.session.insert_one(Event.encode(event))
 
-    def find_event(self, event_id: int):
-        return Event.decode(self.session.find_one({'Event_id': event_id}))
-
     def get_events(self):
         return [Event.decode(event) for event in self.session.find({})]
 

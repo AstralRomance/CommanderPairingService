@@ -1,29 +1,12 @@
 from fastapi import APIRouter, Depends
-
-from ..models.players import (
-    Player,
-    AddPlayerToEvent,
-    PlayerToReturn
-)
 from ..service.playerSvc import PlayerService
 
-router = APIRouter(
-    prefix='/players'
-)
+router = APIRouter(prefix='/players')
 
+@router.get('/player_on_event/{event_id}/{player_id}')
+def get_event_player(event_id: str, player_id: int, service: PlayerService = Depends()):
+    return service.player_on_event(event_id, player_id)
 
-@router.post('/add-to-event', response_model=PlayerToReturn)
-def add_player(player_data: AddPlayerToEvent, service: PlayerService = Depends()):
-    service.add_to_event(player_data)
-    return player_data
-
-
-@router.put('/update-on-event/{event_id}/{player_id}', response_model=PlayerToReturn)
-def update_player(event_id: str, player_id: int, player_data: Player, service: PlayerService = Depends()):
-    service.update_player_info(event_id, player_id, player_data)
-    return player_data
-
-
-@router.delete('/remove-from-event/{event_id}/{player_id}', response_model=PlayerToReturn)
-def remove_player(event_id: str, player_id: int, service: PlayerService = Depends()):
-    service.remove_from_event(event_id, player_id)
+@router.get('players_on_event/{event_id}')
+def get_all_event_players(event_id: str, service: PlayerService = Depends()):
+    return service.all_event_players(event_id)

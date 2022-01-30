@@ -17,6 +17,10 @@ class EventService:
             raise HTTPException('No event with chosen ID')
         return event
 
+    def get_event(self, event_id: str) -> List[EventBase]:
+        event = self._get(event_id)
+        return Event.encode(event)
+
     def get_list(self) -> List[Event]:
         return [Event.encode(event) for event in self.session.get_events()]
 

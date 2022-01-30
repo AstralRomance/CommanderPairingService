@@ -1,27 +1,13 @@
 from pydantic import BaseModel
 
 
-class Player(BaseModel):
+class PlayersOnEvent(BaseModel):
     name: str
     commander: str
     points: int
     sub_points: int
-
-
-class AddPlayerToEvent(Player):
+    has_autowin: bool
     event_id: str
 
-    class Config:
-        orm_mode = True
-
-
-class RemovePlayerFromEvent(BaseModel):
-    event_id: str
-    player_id: int
-
-    class Config:
-        orm_mode = True
-
-
-class PlayerToReturn(Player):
+class PlayerOnEvent(PlayersOnEvent):
     player_id: int
