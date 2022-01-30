@@ -1,30 +1,13 @@
+import asyncio
 from typing import List
 from fastapi import APIRouter, Depends, Response, status
-from ..services.registerSvc import EventsService
-from ..services.eventManagerSvc import eventManagerSvc
-from ..models.event_manager import FullEventData, PlayersPerTable
-from ..tables import Event
+from ..service.eventManagerSvc import eventManagerSvc
+from ..models.eventManager import FullEventInfo
+
 
 router = APIRouter(prefix='/event-manager')
 
-
-@router.put('/create-new-round/{event_id}/{round_number}', response_model=PlayersPerTable)
-def create_new_round(event_id: str, round_number: int, service: eventManagerSvc = Depends()):
-    if round_number == 1:
-        playing_tables = service.generate_first_round(event_id)
-        service.add_round(playing_tables)
-    else:
-        service.generate_round(event_id)
-
-@router.put('/change-player-points/{event_id}')
-def change_player_points(event_id: str, players_info: List[str]):
-    pass
-
-@router.post('/finish-event/{event_id}')
-def finish_event(event_id: str):
-    pass
-
-@router.get('/get-full-event-data/{event_id}', response_model=FullEventData)
-def get_full_event_data(event_id, reg_svc: EventsService = Depends()):
-    output_info = reg_svc.get_full_event_data(event_id)
+@router.get('/get-full-event-data/{event_id}', response_model=FullEventInfo)
+async def get_full_event_data(event_id, manager_svc: eventManagerSvc = Depends()):
+    output_info = await manager_svc.get_full_event_data(event_id)
     return output_info
