@@ -4,13 +4,38 @@ import pymongo
 from pymongo import ReturnDocument
 
 from .settings import settings
-#from .ManagerSchemas import Event, Player
+from .databaseSchema import Event, Player
+
+
+class EventManipulation:
+
+    def __init__(self):
+        self.session = \
+            pymongo.MongoClient(settings.database_url, serverSelectionTimeoutMS=5000)['CommanderPairingService'][
+                'events']
+
+    def find_one(self, event_id: str):
+        return Event.decode(self.session.find_one({'Event_id': event_id}))
+
+    def insert_event(self, event: Event):
+        self.session.insert_one(Event.encode(event))
+
+    def get_events(self):
+        return [Event.decode(event) for event in self.session.find({})]
+
+    def delete_event(self, event_id: int):
+        return Event.decode(self.session.find_one_and_delete({'Event_id': event_id}))
+
+    def replace_event(self, event_id: int, new_event, return_document=ReturnDocument.AFTER):
+        return Event.decode(self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(new_event),
+                                                              return_document=return_document))
 
 
 class ManagerManipulations:
 
     def __init__(self):
-        self.session = pymongo.MongoClient(settings.database_url, serverSelectionTimeoutMS=5000)['CommanderPairingService']['events']
+        self.session = \
+        pymongo.MongoClient(settings.database_url, serverSelectionTimeoutMS=5000)['CommanderPairingService']['events']
 
     def get_full_event_data(self):
         pass
@@ -84,3 +109,28 @@ class ManagerManipulations:
     #     event['Rounds'].append(round_data)
     #     self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(event))
     #     return event
+
+
+class PlayerManipulation:
+
+    def __init__(self):
+        self.session = \
+        pymongo.MongoClient(settings.database_url, serverSelectionTimeoutMS=5000)['CommanderPairingService']['events']
+
+    # This is template for utility search user in database without event_id. Future feature will require it.
+    def find_one(self):
+        pass
+
+    def get_player_from_event(self, event_id: int, player_id: int) -> Player:
+        event = self.session.find_one({'Event_id': event_id})
+        target_player = None
+        for player in event.get('Players'):
+            if player['Player_id'] == player_id:
+                target_player = player
+                break
+        return target_player
+
+    def get_all_event_players(self, event_id: int):
+        event = self.session.find_one({'Event_id': event_id})
+        event_players = event.get('Players')
+        return event_players

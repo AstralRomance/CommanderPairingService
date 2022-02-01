@@ -3,15 +3,15 @@ from typing import List
 from fastapi import HTTPException, Depends
 
 from ..models.events import EventBase, CreateEvent
-from ..EventSchema import Event
-from ..EventManipulation import EventManipulation
+from src.databaseSvc.databaseSchema import Event
+from src.databaseSvc.databaseManipulation import EventManipulation
 
 
 class EventService:
-    def __init__(self, session = Depends(EventManipulation)):
+    def __init__(self, session=Depends(EventManipulation)):
         self.session = session
 
-    def _get(self, event_id: int) -> Event:
+    def _get(self, event_id: str) -> Event:
         event = self.session.find_one(event_id)
         if not event:
             raise HTTPException('No event with chosen ID')
@@ -35,6 +35,6 @@ class EventService:
         event.name = event_data.Event_name
         return Event.encode(self.session.replace_event(event_id, event))
 
-    def delete(self, event_id: int) -> Event:
+    def delete(self, event_id: str) -> Event:
         event = self.session.delete_event(event_id)
         return event

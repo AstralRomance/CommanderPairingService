@@ -9,5 +9,6 @@ class PlayersOnEvent(BaseModel):
     has_autowin: bool
     event_id: str
 
+
 class PlayerOnEvent(PlayersOnEvent):
     player_id: int

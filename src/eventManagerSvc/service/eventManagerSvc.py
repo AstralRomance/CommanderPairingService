@@ -5,11 +5,11 @@ import asyncio
 from fastapi import Depends
 from httpx import AsyncClient
 
-from ..ManagerManipulations import ManagerManipulations
+from src.databaseSvc.databaseManipulation import ManagerManipulations
 
 
 class eventManagerSvc:
-    def __init__(self, session = Depends(ManagerManipulations)):
+    def __init__(self, session=Depends(ManagerManipulations)):
         # This class temporary use API requests.
         # In https://github.com/AstralRomance/CommanderPairingService/issues/6
         # will be implemented separated module to interract with data base

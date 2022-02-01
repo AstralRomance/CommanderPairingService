@@ -8,6 +8,7 @@ class EventInfo(BaseModel):
     Event_Date: datetime
     Event_id: str
 
+
 class PlayerInfo(BaseModel):
     Player_id: int
     Player_name: str
@@ -16,6 +17,7 @@ class PlayerInfo(BaseModel):
     Points: int
     Sub_points: int
     Has_autowin: bool
+
 
 class FullEventInfo(BaseModel):
     event: EventInfo
