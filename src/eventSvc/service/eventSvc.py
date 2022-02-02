@@ -2,9 +2,9 @@ from typing import List
 
 from fastapi import HTTPException, Depends
 
-from ..models.events import EventBase, CreateEvent
-from databaseSvc.databaseSchema import Event
-from databaseSvc.databaseManipulation import EventManipulation
+from src.databaseSvc.databaseManipulation import EventManipulation
+from src.databaseSvc.databaseSchema import Event
+from ..models.events import CreateEvent
 
 
 class EventService:
@@ -24,7 +24,7 @@ class EventService:
         return self.session.get_all_events()
 
     def create(self, event_data: CreateEvent) -> dict:
-        event = Event.validate(event_data.dict())
+        event = Event.validate(event_data.dict(), id_needed=True)
         self.session.insert_event(event)
         return event
 

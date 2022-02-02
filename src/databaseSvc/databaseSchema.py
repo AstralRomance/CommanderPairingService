@@ -46,13 +46,15 @@ class Event:
                      is_finished=event_document.get('Is_finished'))
 
     @staticmethod
-    def validate(event_document):
+    def validate(event_document, id_needed=False):
         if event_document is None:
             return None
 
         event = {}
         if event_document.get('Event_id') is not None:
             event['Event_id'] = event_document.get('Event_id')
+        elif id_needed:
+            event['Event_id'] = str(uuid.uuid4())
         if event_document.get('Event_name') is not None:
             event['Event_name'] = event_document.get('Event_name')
         if event_document.get('Event_Date') is not None:
