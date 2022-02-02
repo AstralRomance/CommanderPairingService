@@ -1,0 +1,8 @@
+[
+    {
+        "deck_uuid": "String",
+        "deck_name": "String",
+        "commanders": "String",
+        "deck_link": "String"
+    }
+]
