@@ -26,8 +26,9 @@ class EventManipulation:
     def insert_event_as_object(self, event: Event):
         self.session.insert_one(Event.encode(event))
 
-    def get_all_events(self) -> List[Event]:
-        return self.session.find({})
+    def get_all_events(self) -> List[dict]:
+        all_events_cursor = self.session.find({})
+        return [event for event in all_events_cursor]
 
     def get_all_events_as_objects(self) -> List[Event]:
         return [Event.decode(event) for event in self.session.find({})]

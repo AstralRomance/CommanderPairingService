@@ -3,8 +3,8 @@ from typing import List
 from fastapi import HTTPException, Depends
 
 from ..models.events import EventBase, CreateEvent
-from src.databaseSvc.databaseSchema import Event
-from src.databaseSvc.databaseManipulation import EventManipulation
+from databaseSvc.databaseSchema import Event
+from databaseSvc.databaseManipulation import EventManipulation
 
 
 class EventService:
