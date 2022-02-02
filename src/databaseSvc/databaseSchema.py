@@ -3,7 +3,7 @@ import uuid
 
 class Event:
 
-    def __init__(self, name, date, players, rounds, event_id=None, is_finished=True):
+    def __init__(self, name, date, players=None, rounds=None, is_finished=None, event_id=None):
         self.name = name
         self.date = date
         if event_id is None:
@@ -33,6 +33,9 @@ class Event:
 
     @staticmethod
     def decode(event_document):
+        if event_document is None:
+            return None
+
         return Event(event_id=event_document.get('Event_id'),
                      name=event_document.get('Event_name'),
                      date=event_document.get('Event_Date'),
@@ -42,10 +45,31 @@ class Event:
                                                                                in event_document.get('Rounds')],
                      is_finished=event_document.get('Is_finished'))
 
+    @staticmethod
+    def validate(event_document):
+        if event_document is None:
+            return None
+
+        event = {}
+        if event_document.get('Event_id') is not None:
+            event['Event_id'] = event_document.get('Event_id')
+        if event_document.get('Event_name') is not None:
+            event['Event_name'] = event_document.get('Event_name')
+        if event_document.get('Event_Date') is not None:
+            event['Event_Date'] = event_document.get('Event_Date')
+        if event_document.get('Players') is not None:
+            event['Players'] = [Player.encode(player) for player in event_document.get('Players')]
+        if event_document.get('Rounds') is not None:
+            event['Rounds'] = [Round.encode(event_round) for event_round in event_document.get('Rounds')]
+        if event_document.get('Is_finished') is not None:
+            event['Is_finished'] = event_document.get('Is_finished')
+
+        return event
+
 
 class Player:
 
-    def __init__(self, name, commander, deck_link, points, sub_points, player_id=None, has_autowin=0):
+    def __init__(self, name, points, sub_points, commander=None, deck_link=None, player_id=None, has_autowin=None):
         if player_id is None:
             self.player_id = str(uuid.uuid4())
         else:

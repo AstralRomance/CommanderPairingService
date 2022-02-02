@@ -14,19 +14,35 @@ class EventManipulation:
             pymongo.MongoClient(settings.database_url, serverSelectionTimeoutMS=5000)['CommanderPairingService'][
                 'events']
 
-    def find_one(self, event_id: str):
+    def find_one(self, event_id: str) -> dict:
+        return self.session.find_one({'Event_id': event_id})
+
+    def find_one_as_object(self, event_id: str) -> Event:
         return Event.decode(self.session.find_one({'Event_id': event_id}))
 
-    def insert_event(self, event: Event):
+    def insert_event(self, event: dict):
+        self.session.insert_one(event)
+
+    def insert_event_as_object(self, event: Event):
         self.session.insert_one(Event.encode(event))
 
-    def get_events(self):
+    def get_all_events(self) -> List[Event]:
+        return self.session.find({})
+
+    def get_all_events_as_objects(self) -> List[Event]:
         return [Event.decode(event) for event in self.session.find({})]
 
-    def delete_event(self, event_id: int):
-        return Event.decode(self.session.find_one_and_delete({'Event_id': event_id}))
+    def delete_event(self, event_id: str):
+        return self.session.find_one_and_delete({'Event_id': event_id})
 
-    def replace_event(self, event_id: int, new_event, return_document=ReturnDocument.AFTER):
+    def update_event(self, event_id: str, new_values: dict, return_document=ReturnDocument.AFTER) -> dict:
+        return self.session.find_one_and_update({'Event_id': event_id}, {'$set': new_values},
+                                                return_document=return_document)
+
+    def replace_event(self, event_id: str, new_event: dict, return_document=ReturnDocument.AFTER) -> dict:
+        return self.session.find_one_and_replace({'Event_id': event_id}, new_event, return_document=return_document)
+
+    def replace_event_as_object(self, event_id: str, new_event: Event, return_document=ReturnDocument.AFTER) -> Event:
         return Event.decode(self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(new_event),
                                                               return_document=return_document))
 
@@ -35,7 +51,8 @@ class ManagerManipulations:
 
     def __init__(self):
         self.session = \
-        pymongo.MongoClient(settings.database_url, serverSelectionTimeoutMS=5000)['CommanderPairingService']['events']
+            pymongo.MongoClient(settings.database_url, serverSelectionTimeoutMS=5000)['CommanderPairingService'][
+                'events']
 
     def get_full_event_data(self):
         pass
@@ -115,7 +132,8 @@ class PlayerManipulation:
 
     def __init__(self):
         self.session = \
-        pymongo.MongoClient(settings.database_url, serverSelectionTimeoutMS=5000)['CommanderPairingService']['events']
+            pymongo.MongoClient(settings.database_url, serverSelectionTimeoutMS=5000)['CommanderPairingService'][
+                'events']
 
     # This is template for utility search user in database without event_id. Future feature will require it.
     def find_one(self):
