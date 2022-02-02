@@ -18,7 +18,7 @@ def get_event(event_id: str, service: EventService = Depends()):
     return service.get_event(event_id)
 
 
-@router.post('/', response_model=EventBase)
+@router.post('/', response_model=CreateEvent)
 def create_event(event_data: CreateEvent, service: EventService = Depends()):
     return service.create(event_data)
 
