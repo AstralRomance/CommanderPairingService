@@ -2,8 +2,8 @@ from typing import List
 
 from fastapi import HTTPException, Depends
 
-from src.databaseSvc.databaseManipulation import EventManipulation
-from src.databaseSvc.databaseSchema import Event
+from databaseSvc.databaseManipulation import EventManipulation
+from databaseSvc.databaseSchema import Event
 from ..models.events import CreateEvent
 
 

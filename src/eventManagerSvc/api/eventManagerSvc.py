@@ -2,17 +2,19 @@ import asyncio
 from typing import List
 from fastapi import APIRouter, Depends, Response, status
 from ..service.eventManagerSvc import eventManagerSvc
-from ..models.eventManager import FullEventInfo, PlayerInfo
+from ..models.eventManager import AddPlayerToEvent, PlayerInfo, FullEventInfo
 
 
 router = APIRouter(prefix='/event-manager')
 
 @router.get('/get-full-event-data/{event_id}', response_model=FullEventInfo)
-async def get_full_event_data(event_id, manager_svc: eventManagerSvc = Depends()):
-    output_info = await manager_svc.get_full_event_data(event_id)
+def get_full_event_data(event_id, manager_svc: eventManagerSvc = Depends()):
+    output_info = manager_svc.get_full_event_data(event_id)
+    print(output_info)
     return output_info
 
-@router.post('change-players-points/{event_id}/{player_id}', response_model=PlayerInfo)
-async def change_player_points(event_id: str, player_id: int, manager_svc: eventManagerSvc = Depends()):
-    player_data = await manager_svc.change_player_points(event_id, player_id)
-    return player_data
+@router.post('/add-player/{event_id}', response_model = PlayerInfo)
+def add_player_to_event(event_id: str, player_data: AddPlayerToEvent, manager_svc: eventManagerSvc = Depends()):
+    added_player_data = manager_svc.add_player_to_event(event_id, player_data)
+    print(added_player_data)
+    return added_player_data
