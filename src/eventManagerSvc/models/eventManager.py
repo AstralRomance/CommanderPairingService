@@ -29,6 +29,10 @@ class PlayerBase(BaseModel):
     Sub_points: int
     Has_autowin: bool
 
+class UpdatePlayerPoints(BaseModel):
+    Points: int
+    Sub_points: int
+
 class FullEventInfo(BaseModel):
     Event_id: str
     Event_name: str

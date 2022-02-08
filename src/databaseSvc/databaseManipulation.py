@@ -46,21 +46,28 @@ class EventManipulation:
         return Event.decode(self.session.find_one_and_replace({'Event_id': event_id}, Event.encode(new_event),
                                                               return_document=return_document))
 
-    def add_player_to_event(self, event_id: str, player_data: dict, return_document=ReturnDocument.AFTER) -> Player:
-        pass
+    def remove_player_from_event(self, event_id: str, player_id: str) -> Event:
+        self.session.update({'Event_id': event_id}, {'$pull': {'Players': {'Player_id': player_id}}})
+        target_event = Event.decode(self.session.find_one({'Event_id': event_id}))
+        return target_event
 
-class PlayerManipulation:
-
-    def __init__(self):
-        self.session = \
-            pymongo.MongoClient(settings.database_url, serverSelectionTimeoutMS=5000)['CommanderPairingService'][
-                'events']
+    def update_player_info(self, event_id: str, player_id: str, player_data: dict) -> Player:
+        target_event = Event.encode(Event.decode(self.session.find_one({'Event_id': event_id})))
+        player_data = dict(player_data)
+        target_player = None
+        for player in target_event['Players']:
+            if player['Player_id'] == player_id:
+                target_player = player
+                for key, value in player_data.items():
+                    player[key] += value
+        self.session.find_one_and_replace({'Event_id': event_id}, target_event)
+        return Player.decode(player)
 
     # This is template for utility search user in database without event_id. Future feature will require it.
     def find_one(self):
         pass
 
-    def get_player_from_event(self, event_id: int, player_id: int) -> Player:
+    def get_player_from_event(self, event_id: str, player_id: str) -> Player:
         event = self.session.find_one({'Event_id': event_id})
         target_player = None
         for player in event.get('Players'):
@@ -69,7 +76,7 @@ class PlayerManipulation:
                 break
         return target_player
 
-    def get_all_event_players(self, event_id: int):
+    def get_all_event_players(self, event_id: str):
         event = self.session.find_one({'Event_id': event_id})
         event_players = event.get('Players')
         return event_players

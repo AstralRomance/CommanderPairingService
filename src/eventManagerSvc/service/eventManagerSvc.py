@@ -26,10 +26,15 @@ class eventManagerSvc:
         target_event = self.session.find_one_as_object(event_id)
         target_player_data = self.gen_default_player_params(copy(dict(player_data)))
         target_player_data = Player.decode(target_player_data)
-        logger.debug(target_player_data)
         if target_event.players:
             target_event.players.append(target_player_data)
         else:
             target_event.players = [target_player_data]
         self.session.replace_event_as_object(event_id, target_event)
         return Player.encode(target_player_data)
+
+    def remove_player_from_event(self, event_id: str, player_id: str) -> Event:
+        return Event.encode(self.session.remove_player_from_event(event_id, player_id))
+
+    def update_player_info(self, event_id: str, player_id: str, player_data: dict) -> Player:
+        return Player.encode(self.session.update_player_info(event_id, player_id, player_data))
