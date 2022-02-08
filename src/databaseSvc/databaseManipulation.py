@@ -61,7 +61,7 @@ class EventManipulation:
                 for key, value in player_data.items():
                     player[key] += value
         self.session.find_one_and_replace({'Event_id': event_id}, target_event)
-        return Player.decode(player)
+        return Player.decode(target_player)
 
     # This is template for utility search user in database without event_id. Future feature will require it.
     def find_one(self):
