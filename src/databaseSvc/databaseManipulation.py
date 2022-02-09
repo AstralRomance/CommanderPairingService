@@ -36,6 +36,8 @@ class EventManipulation:
         return self.session.find_one_and_delete({'Event_id': event_id})
 
     def update_event(self, event_id: str, new_values: dict, return_document=ReturnDocument.AFTER) -> dict:
+        print('*'*100)
+        print(new_values)
         return self.session.find_one_and_update({'Event_id': event_id}, {'$set': new_values},
                                                 return_document=return_document)
 
@@ -52,7 +54,7 @@ class EventManipulation:
         return target_event
 
     def update_player_info(self, event_id: str, player_id: str, player_data: dict) -> Player:
-        target_event = Event.encode(Event.decode(self.session.find_one({'Event_id': event_id})))
+        target_event = self.session.find_one({'Event_id': event_id})
         player_data = dict(player_data)
         target_player = None
         for player in target_event['Players']:
@@ -62,10 +64,6 @@ class EventManipulation:
                     player[key] += value
         self.session.find_one_and_replace({'Event_id': event_id}, target_event)
         return Player.decode(target_player)
-
-    # This is template for utility search user in database without event_id. Future feature will require it.
-    def find_one(self):
-        pass
 
     def get_player_from_event(self, event_id: str, player_id: str) -> Player:
         event = self.session.find_one({'Event_id': event_id})

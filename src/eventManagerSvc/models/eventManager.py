@@ -33,8 +33,11 @@ class UpdatePlayerPoints(BaseModel):
     Points: int
     Sub_points: int
 
-class FullEventInfo(BaseModel):
+class GeneralEventInfo(BaseModel):
     Event_id: str
     Event_name: str
     Event_Date: datetime
     Players: List[PlayerInfo]
+
+class FullEventInfo(BaseModel):
+    pass

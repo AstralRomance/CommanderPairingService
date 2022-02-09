@@ -38,3 +38,15 @@ class eventManagerSvc:
 
     def update_player_info(self, event_id: str, player_id: str, player_data: dict) -> Player:
         return Player.encode(self.session.update_player_info(event_id, player_id, player_data))
+
+    def generate_round(self, event_id: str, round_number: int):
+        if round_number == 1:
+            target_event = self.session.find_one(event_id)
+            event_players = target_event['Players']
+            for _ in range(5):
+                random.shuffle(event_players)
+            target_event_players = [event_players[i:i+4] for i in range(0, len(event_players), 4)]
+            target_event['Rounds'] = [{"Number": round_number, "Players_per_table": {str(table_num+1): target_event_players[table_num] for table_num in range(len(target_event_players))}}]
+            self.session.update_event(event_id, target_event)
+        else:
+            pass
