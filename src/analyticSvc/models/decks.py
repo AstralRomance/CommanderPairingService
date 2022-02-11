@@ -11,3 +11,6 @@ class DeckBase(BaseModel):
 
     class Config:
         orm_mode = True
+
+class DeckInput(BaseModel):
+    pass
