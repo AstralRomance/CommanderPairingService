@@ -46,46 +46,40 @@ class DataBaseManipulation:
     def replace_event_as_object(self, event_id: str, new_event: Event) -> Event:
         return Event.to_object(self.replace_event(event_id, Event.to_dict(new_event)))
 
-    def remove_player_from_event(self, event_id: str, player_id: str) -> Event:
+    def remove_player_from_event(self, event_id: str, player_id: str):
         event = self.find_event_as_object(event_id)
         if event.players is None:
-            return event
-            # Todo: Возвращать ошибку?
+            return None
         event.players = [player for player in event.players if player.player_id != player_id]
         return self.replace_event_as_object(event_id, event)
 
-    def update_player_info(self, event_id: str, player_id: str, player_data: dict) -> Player:
+    def update_player_points_info(self, event_id: str, player_id: str, player_data: dict):
         target_event = self.find_event(event_id)
         target_player = None
         if target_event.get('Players') is None:
             return None
-            # Todo: Возвращать ошибку?
         for player in target_event['Players']:
             if player['Player_id'] == player_id:
                 target_player = player
                 for key, value in player_data.items():
-                    player[key] = value
-                    # Todo: += или = ?
+                    player[key] += value
         self.replace_event(event_id, target_event)
         return Player.to_object(target_player)
 
-    def get_player_from_event(self, event_id: str, player_id: str) -> Player:
+    def get_player_from_event(self, event_id: str, player_id: str):
         event = self.find_event(event_id)
         target_player = None
         if event.get('Players') is None:
             return None
-            # Todo: Возвращать ошибку?
         for player in event['Players']:
             if player['Player_id'] == player_id:
                 return Player.to_object(target_player)
         return None
-        # Todo: Возвращать ошибку?
 
     def get_all_event_players(self, event_id: str) -> List[dict]:
         event = self.find_event(event_id)
         event_players = event.get('Players')
         return event_players
-        # Todo: Вернётся None если никого не было
 
     def add_player_into_event(self, event_id: str, player: Player) -> Event:
         return self.add_players_into_event(event_id, [player])

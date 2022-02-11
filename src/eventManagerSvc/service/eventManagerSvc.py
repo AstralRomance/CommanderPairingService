@@ -37,7 +37,7 @@ class eventManagerSvc:
         return Event.to_dict(self.session.remove_player_from_event(event_id, player_id))
 
     def update_player_info(self, event_id: str, player_id: str, player_data: dict) -> Player:
-        return Player.to_dict(self.session.update_player_info(event_id, player_id, player_data))
+        return Player.to_dict(self.session.update_player_points_info(event_id, player_id, player_data))
 
     def generate_round(self, event_id: str, round_number: int):
         if round_number == 1:
