@@ -83,7 +83,7 @@ class Player:
         self.points = points
         self.sub_points = sub_points
         self.has_autowin = has_autowin
-        self.staus = status
+        self.status = status
 
     @staticmethod
     def to_dict(player_object):
@@ -153,7 +153,6 @@ class PlayersPerTable:
     @staticmethod
     def to_dict(player_per_tables_object):
         player_per_tables = {'Table_number': player_per_tables_object.table_number}
-
         if player_per_tables_object.players_on_table is not None:
             player_per_tables['Players_on_table'] = [player_id for player_id in
                                                      player_per_tables_object.players_on_table]

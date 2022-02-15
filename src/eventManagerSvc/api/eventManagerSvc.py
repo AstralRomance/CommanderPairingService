@@ -28,8 +28,11 @@ def update_player_points(event_id: str, player_id: str, player_data: UpdatePlaye
     actual_player_data = manager_svc.update_player_info(event_id, player_id, player_data)
     return actual_player_data
 
-@router.put('/generate-round/{event_id}', response_model = FullEventInfo)
+#, response_model = FullEventInfo
+@router.put('/generate-round/{event_id}')
 def generate_round(event_id: str, round_number: int, manager_svc: eventManagerSvc = Depends()):
     manager_svc.generate_round(event_id, round_number)
     output_info = manager_svc.get_full_event_data(event_id)
+    print('**********************')
+    print(output_info)
     return output_info

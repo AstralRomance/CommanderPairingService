@@ -15,7 +15,7 @@ class DataBaseManipulation:
                 'events']
 
     def find_event(self, event_id: str) -> dict:
-        return self.session.find_event({'Event_id': event_id})
+        return self.session.find_one({'Event_id': event_id})
 
     def find_event_as_object(self, event_id: str) -> Event:
         return Event.to_object(self.find_event(event_id))
@@ -56,6 +56,7 @@ class DataBaseManipulation:
     def update_player_points_info(self, event_id: str, player_id: str, player_data: dict):
         target_event = self.find_event(event_id)
         target_player = None
+        player_data = dict(player_data)
         if target_event.get('Players') is None:
             return None
         for player in target_event['Players']:
