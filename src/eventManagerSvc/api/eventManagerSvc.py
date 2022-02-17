@@ -23,9 +23,10 @@ def remove_player_from_event(event_id: str, player_id: str, manager_svc: eventMa
     updated_event_data = manager_svc.remove_player_from_event(event_id, player_id)
     return updated_event_data
 
-@router.put('/update-player-points/{event_id}/{player_id}', response_model = PlayerInfo)
-def update_player_points(event_id: str, player_id: str, player_data: UpdatePlayerPoints, manager_svc: eventManagerSvc = Depends()):
-    actual_player_data = manager_svc.update_player_info(event_id, player_id, player_data)
+#, response_model = PlayerInfo
+@router.put('/update-player-points/{event_id}/{Round_num}/{player_id}')
+def update_player_points(event_id: str, player_id: str, round_num: int, player_data: UpdatePlayerPoints, manager_svc: eventManagerSvc = Depends()):
+    actual_player_data = manager_svc.update_player_points(event_id, player_id, round_num, player_data)
     return actual_player_data
 
 #, response_model = FullEventInfo
@@ -33,6 +34,4 @@ def update_player_points(event_id: str, player_id: str, player_data: UpdatePlaye
 def generate_round(event_id: str, round_number: int, manager_svc: eventManagerSvc = Depends()):
     manager_svc.generate_round(event_id, round_number)
     output_info = manager_svc.get_full_event_data(event_id)
-    print('**********************')
-    print(output_info)
     return output_info

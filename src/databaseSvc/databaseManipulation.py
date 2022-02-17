@@ -53,29 +53,20 @@ class DataBaseManipulation:
         event.players = [player for player in event.players if player.player_id != player_id]
         return self.replace_event_as_object(event_id, event)
 
-    def update_player_points_info(self, event_id: str, player_id: str, player_data: dict):
-        target_event = self.find_event(event_id)
-        target_player = None
-        player_data = dict(player_data)
-        if target_event.get('Players') is None:
-            return None
-        for player in target_event['Players']:
-            if player['Player_id'] == player_id:
-                target_player = player
-                for key, value in player_data.items():
-                    player[key] += value
-        self.replace_event(event_id, target_event)
-        return Player.to_object(target_player)
+    def update_player(self, event_id: str, player_id: str, player_data: dict):
+        self.session.find_one_and_update({'Event_id': event_id},
+                                         {'$set': {'Players.$[element]': player_data}},
+                                         array_filters=[{'element': {'$gte': {'Player_id': player_id}}}],
+                                         return_document=ReturnDocument.AFTER)
 
     def get_player_from_event(self, event_id: str, player_id: str):
         event = self.find_event(event_id)
         target_player = None
-        if event.get('Players') is None:
-            return None
         for player in event['Players']:
             if player['Player_id'] == player_id:
-                return Player.to_object(target_player)
-        return None
+                target_player = player
+                break
+        return target_player
 
     def get_all_event_players(self, event_id: str) -> List[dict]:
         event = self.find_event(event_id)
