@@ -2,8 +2,8 @@ from typing import List
 
 from fastapi import Depends
 
-from src.databaseSvc.databaseSchema import Player
-from src.databaseSvc.databaseManipulation import PlayerManipulation
+from databaseSvc.databaseSchema import Player
+from databaseSvc.databaseManipulation import PlayerManipulation
 
 
 class PlayerService:

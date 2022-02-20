@@ -39,6 +39,12 @@ class DataBaseManipulation:
         return self.session.find_one_and_update({'Event_id': event_id}, {'$set': new_values},
                                                 return_document=ReturnDocument.AFTER)
 
+    def update_player_on_event(self, event_id: str, player_id: str, player_data: dict):
+        return self.session.find_one_and_update({'Event_id': event_id},
+                                                {'$set': {'Players.$[element]': player_data}},
+                                                array_filters=[{'element': {'$gte': {'Player_id': player_id}}}],
+                                                return_document=ReturnDocument.AFTER)
+
     def replace_event(self, event_id: str, new_event: dict) -> dict:
         return self.session.find_one_and_replace({'Event_id': event_id}, new_event,
                                                  return_document=ReturnDocument.AFTER)
@@ -47,11 +53,18 @@ class DataBaseManipulation:
         return Event.to_object(self.replace_event(event_id, Event.to_dict(new_event)))
 
     def remove_player_from_event(self, event_id: str, player_id: str):
-        event = self.find_event_as_object(event_id)
-        if event.players is None:
-            return None
-        event.players = [player for player in event.players if player.player_id != player_id]
-        return self.replace_event_as_object(event_id, event)
+        event = self.find_event(event_id)
+        if event['Status'] == 'created':
+            target_document = self.session.update({'Event_id': event_id},
+                                                  {'$pull': {'Players': {'Player_id': player_id}}})
+        elif event['Status'] == 'started':
+            target_document = self.session.find_one_and_update({'Event_id': event_id},
+                                                               {'$set': {'Players.$[element]': {'Status': True}}},
+                                                               array_filters = [{'element': {'$gte': {'Player_id': player_id}}}],
+                                                               return_document=ReturnDocument.AFTER)
+        elif event['Status'] == 'finished':
+            target_document = {'error': 'Event already finished'}
+        return target_document
 
     def update_player(self, event_id: str, player_id: str, player_data: dict):
         self.session.find_one_and_update({'Event_id': event_id},
