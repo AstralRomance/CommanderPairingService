@@ -42,7 +42,7 @@ class DataBaseManipulation:
     def update_player_on_event(self, event_id: str, player_id: str, player_data: dict):
         return self.session.find_one_and_update({'Event_id': event_id},
                                                 {'$set': {'Players.$[element]': player_data}},
-                                                array_filters=[{'element': {'$gte': {'Player_id': player_id}}}],
+                                                array_filters=[{'element': {'$eq': {'Player_id': player_id}}}],
                                                 return_document=ReturnDocument.AFTER)
 
     def replace_event(self, event_id: str, new_event: dict) -> dict:
@@ -60,7 +60,7 @@ class DataBaseManipulation:
         elif event['Status'] == 'started':
             target_document = self.session.find_one_and_update({'Event_id': event_id},
                                                                {'$set': {'Players.$[element]': {'Status': True}}},
-                                                               array_filters = [{'element': {'$gte': {'Player_id': player_id}}}],
+                                                               array_filters = [{'element': {'$eq': {'Player_id': player_id}}}],
                                                                return_document=ReturnDocument.AFTER)
         elif event['Status'] == 'finished':
             target_document = {'error': 'Event already finished'}
@@ -69,7 +69,7 @@ class DataBaseManipulation:
     def update_player(self, event_id: str, player_id: str, player_data: dict):
         self.session.find_one_and_update({'Event_id': event_id},
                                          {'$set': {'Players.$[element]': player_data}},
-                                         array_filters=[{'element': {'$gte': {'Player_id': player_id}}}],
+                                         array_filters=[{'element': {'$eq': {'Player_id': player_id}}}],
                                          return_document=ReturnDocument.AFTER)
 
     def get_player_from_event(self, event_id: str, player_id: str):
