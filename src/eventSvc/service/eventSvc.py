@@ -24,9 +24,9 @@ class EventService:
         return self.session.get_all_events()
 
     def create(self, event_data: CreateEvent) -> dict:
-        event = Event.validate(event_data.dict(), id_needed=True)
-        self.session.insert_event(event)
-        return event
+        event_data['Status'] = 'created'
+        self.session.insert_event(event_data)
+        return event_data
 
     def update(self, event_id: str, event_data: CreateEvent) -> dict:
         return self.session.update_event(event_id, Event.validate(event_data.dict()))

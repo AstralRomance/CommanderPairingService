@@ -36,6 +36,12 @@ class eventManagerSvc:
     def get_full_event_data(self, event_id: str) -> Event:
         return Event.to_dict(self.session.find_event_as_object(event_id))
 
+    def change_event_state(self, event_id: str, target_state: str):
+        return self.session.change_event_status(event_id, {'Status': target_state})
+
+    def update_player_on_event(self, event_id: str, player_id: str, player_data: dict):
+        return self.session.update_player_on_event(event_id, player_id, player_data)
+
     def add_player_to_event(self, event_id: str, player_data: dict) -> Player:
         target_event = self.session.find_event_as_object(event_id)
         target_player_data = self.gen_default_player_params(copy(dict(player_data)))
@@ -48,7 +54,14 @@ class eventManagerSvc:
         return Player.to_dict(target_player_data)
 
     def remove_player_from_event(self, event_id: str, player_id: str) -> Event:
-        return Event.to_dict(self.session.remove_player_from_event(event_id, player_id))
+        remove_player_response = self.session.remove_player_from_event(event_id, player_id)
+        response = None
+        if remove_player_response.get('error'):
+            response = 'Event finished' # Change this to http exception
+        if not remove_player_response:
+            response = None # Change to 404 response
+        response = remove_player_response
+        return response
 
     def update_player_points(self, event_id: str, player_id: str, round_number: int, player_data: dict):
         target_event = self.session.find_event(event_id)
@@ -80,7 +93,6 @@ class eventManagerSvc:
         else:
             target_player = None # Replace to not found reponse
         return target_player
-
 
     def generate_round(self, event_id: str, round_number: int):
         '''

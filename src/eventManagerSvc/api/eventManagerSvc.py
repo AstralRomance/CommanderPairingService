@@ -23,15 +23,28 @@ def remove_player_from_event(event_id: str, player_id: str, manager_svc: eventMa
     updated_event_data = manager_svc.remove_player_from_event(event_id, player_id)
     return updated_event_data
 
-#, response_model = PlayerInfo
 @router.put('/update-player-points/{event_id}/{Round_num}/{player_id}')
 def update_player_points(event_id: str, player_id: str, round_num: int, player_data: UpdatePlayerPoints, manager_svc: eventManagerSvc = Depends()):
     actual_player_data = manager_svc.update_player_points(event_id, player_id, round_num, player_data)
     return actual_player_data
 
-#, response_model = FullEventInfo
 @router.put('/generate-round/{event_id}')
 def generate_round(event_id: str, round_number: int, manager_svc: eventManagerSvc = Depends()):
     manager_svc.generate_round(event_id, round_number)
     output_info = manager_svc.get_full_event_data(event_id)
     return output_info
+
+@router.put('change-event-player/{event_id}/{player_id}')
+def update_player_on_event(event_id: str, player_id: str, player_data: AddPlayerToEvent, manager_svc: eventManagerSvc = Depends()):
+    actual_player_data = manager_svc.update_player_on_event(event_id, player_id, player_data)
+    return actual_player_data
+
+@router.delete('remove-player-from-event/{event_id}/{player_id}')
+def remove_player_from_event(event_id: str, player_id: str, manager_svc: eventManagerSvc = Depends()):
+    manager_svc.remove_player_from_event(event_id, player_id)
+    return manager_svc.get_full_event_data(event_id)
+
+@router.post('change-event-state/{event_id}')
+def change_event_state(event_id: str, target_state: str, manager_svc: eventManagerSvc = Depends()):
+    manager_svc.change_event_state(event_id, target_state)
+    return manager_svc.get_full_event_data(event_id)
