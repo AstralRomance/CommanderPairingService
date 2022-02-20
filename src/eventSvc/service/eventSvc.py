@@ -4,7 +4,7 @@ from fastapi import HTTPException, Depends
 
 from databaseSvc.databaseManipulation import DataBaseManipulation
 from databaseSvc.databaseSchema import Event
-from ..models.events import CreateEvent
+from ..models.events import FullEvent
 
 
 class EventService:
@@ -14,7 +14,7 @@ class EventService:
     def _get(self, event_id: str) -> dict:
         event = self.session.find_event(event_id)
         if not event:
-            raise HTTPException('No event with chosen ID')
+            raise HTTPException(404, 'No event with chosen ID')
         return event
 
     def get_event(self, event_id: str) -> dict:
@@ -23,13 +23,14 @@ class EventService:
     def get_list(self) -> List[dict]:
         return self.session.get_all_events()
 
-    def create(self, event_data: CreateEvent) -> dict:
-        event_data['Status'] = 'created'
+    def create(self, event_data: FullEvent) -> FullEvent:
+        if event_data.Status is None:
+            event_data['Status'] = 'created'
         self.session.insert_event(event_data)
         return event_data
 
-    def update(self, event_id: str, event_data: CreateEvent) -> dict:
-        return self.session.update_event(event_id, Event.validate(event_data.dict()))
+    def update(self, event_id: str, event_data: FullEvent) -> dict:
+        return self.session.update_event(event_id, event_data.dict())
 
     def delete(self, event_id: str) -> Event:
         return self.session.delete_event(event_id)

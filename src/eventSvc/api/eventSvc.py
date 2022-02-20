@@ -1,6 +1,6 @@
 from typing import List
 from fastapi import APIRouter, Depends, Response, status
-from ..models.events import EventBase, CreateEvent
+from ..models.events import CreateEvent, FullEvent
 from ..service.eventSvc import EventService
 
 router = APIRouter(
@@ -8,23 +8,23 @@ router = APIRouter(
 )
 
 
-@router.get('/', response_model=List[EventBase])
+@router.get('/', response_model=List[FullEvent])
 def get_events(service: EventService = Depends()):
     return service.get_list()
 
 
-@router.get('/{event_id}', response_model=EventBase)
+@router.get('/{event_id}', response_model=FullEvent)
 def get_event(event_id: str, service: EventService = Depends()):
     return service.get_event(event_id)
 
 
-@router.post('/', response_model=EventBase)
-def create_event(event_data: CreateEvent, service: EventService = Depends()):
+@router.post('/', response_model=FullEvent)
+def create_event(event_data: FullEvent, service: EventService = Depends()):
     return service.create(event_data)
 
 
-@router.put('/{event_id}', response_model=EventBase)
-def update_event(event_id: str, event_data: CreateEvent, service: EventService = Depends()):
+@router.put('/{event_id}', response_model=FullEvent)
+def update_event(event_id: str, event_data: FullEvent, service: EventService = Depends()):
     return service.update(event_id, event_data)
 
 
