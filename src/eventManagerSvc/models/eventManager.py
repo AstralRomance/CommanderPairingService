@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Optional
 from datetime import datetime
 from pydantic import BaseModel
     
@@ -6,13 +6,13 @@ from pydantic import BaseModel
 class AddPlayerToEvent(BaseModel):
     Player_name: str
     Commander: str
-    Deck_link: Union[str, None]
+    Deck_link: Optional[str]
 
 class PlayerInfo(AddPlayerToEvent):
     Player_id: str
     Player_name: str
     Commander: str
-    Deck_link: Union[str, None]
+    Deck_link: Optional[str]
     Points: int
     Sub_points: int
 

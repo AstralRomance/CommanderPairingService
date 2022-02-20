@@ -1,15 +1,15 @@
 [
     {
         "Event_name": "string",
-        "Event_Date": "Date",
+        "Event_Date": "integer",
         "Event_id": "string",
         "Status": "string",
         "Players": [
             {
-                "Player_id": "int",
+                "Player_id": "string",
                 "Player_name": "string",
                 "Commander": "string",
-                "Deck_link": "хз",
+                "Deck_link": "string",
                 "Points": "integer",
                 "Sub_points": "integer",
                 "Has_autowin": "integer",
